@@ -44,6 +44,7 @@ fmtsvid =  ['video/mp4',
             'video/quicktime'
             ]
 
+fmtsarchive = ['application/zip']
 
 ## GENERAL TESTS ##
 # Size of file
@@ -119,6 +120,15 @@ def _jng_min_size(obj):
         return False
 
 
+##ARCHIVE FORMAT TESTS ##
+
+#https://en.wikipedia.org/wiki/Zip_(file_format), see Limits
+def _zip_min_size(obj):
+    if os.path.getsize(obj) < 22:
+        return True
+    else:
+    	return False
+
 def runtests(filename):
     results = defaultdict(dict)
 
@@ -154,6 +164,10 @@ def runtests(filename):
             results['text']['length_less_than_100c'] = _word_length(docx.Document(filename))
         else:
             results['text']['length_less_than_100c'] = _text_length(open(filename).read())
+
+    if fmine in fmtsarchive:
+        if fmime == 'application/zip':
+        	results['archive']['under_zip_min_size'] = _zip_min_size(filename)
  
     return results
 
